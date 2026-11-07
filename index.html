@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Management System</title>
+
+    <!-- CSS Styling -->
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f1f5f9;
+            color: #1e293b;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 750px;
+            margin: 40px auto;
+            background-color: white;
+            padding: 35px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #2563eb;
+            margin-bottom: 15px;
+        }
+
+        p {
+            color: #64748b;
+            margin-bottom: 25px;
+            line-height: 1.7;
+        }
+
+        .info {
+            background-color: #eff6ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .info h3 {
+            color: #1d4ed8;
+            margin-bottom: 10px;
+        }
+
+        .info ul {
+            list-style: none;
+            line-height: 2;
+        }
+
+        .info li {
+            color: #334155;
+        }
+
+        .note {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #64748b;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Student Management System</h1>
+
+        <p>
+            Welcome to the Student Management and
+            Academic Results Analysis System.
+        </p>
+
+        <div class="info">
+
+            <h3>System Features</h3>
+
+            <ul>
+                <li>Student Information Management</li>
+                <li>Calculate Student Average</li>
+                <li>Determine Student Grade</li>
+                <li>Check Final Result</li>
+                <li>Grace Marks System</li>
+            </ul>
+
+        </div>
+
+        <p class="note">
+            Open the Browser Console to see the results.
+        </p>
+
+    </div>
+
+
+    <!-- JavaScript Code -->
+    <script>
+
+        // ==================================
+        // 1. Create Student Class
+        // ==================================
+
+        class Student {
+
+            constructor(id, name, grades, attendance) {
+
+                this.id = id;
+                this.name = name;
+                this.grades = grades;
+                this.attendance = attendance;
+
+            }
+
+
+            // Calculate Average using reduce
+
+            calculateAverage() {
+
+                const total = this.grades.reduce((sum, grade) => {
+
+                    return sum + grade;
+
+                }, 0);
+
+                return total / this.grades.length;
+
+            }
+
+
+            // Calculate Grade using if / else
+
+            getGrade() {
+
+                const average = this.calculateAverage();
+
+                if (average >= 90) {
+
+                    return "A";
+
+                } else if (average >= 80) {
+
+                    return "B";
+
+                } else if (average >= 70) {
+
+                    return "C";
+
+                } else if (average >= 60) {
+
+                    return "D";
+
+                } else if (average >= 50) {
+
+                    return "E";
+
+                } else {
+
+                    return "F";
+
+                }
+
+            }
+
+
+            // Check Final Result
+
+            getResult() {
+
+                const average = this.calculateAverage();
+
+                if (average >= 50 && this.attendance >= 75) {
+
+                    return "ناجح";
+
+                } else {
+
+                    return "يحتاج مراجعة";
+
+                }
+
+            }
+
+        }
+
+
+        // ==================================
+        // 2. Create Students Objects Array
+        // ==================================
+
+        const studentsList = [
+
+            new Student(1, "Ahmed", [90, 85, 95], 90),
+
+            new Student(2, "Sara", [45, 48, 46], 80),
+
+            new Student(3, "Omar", [40, 44, 45], 85),
+
+            new Student(4, "Mona", [70, 75, 80], 70)
+
+        ];
+
+
+        // ==================================
+        // 3. Print Students Reports
+        // ==================================
+
+        console.log("========== Students Reports ==========");
+
+        studentsList.forEach((student) => {
+
+            console.log("Student Name:", student.name);
+
+            console.log("Average:",
+                student.calculateAverage().toFixed(2));
+
+            console.log("Grade:", student.getGrade());
+
+            console.log("Result:", student.getResult());
+
+            console.log("--------------------------------");
+
+        });
+
+
+        // ==================================
+        // 4. Filter Struggling Students
+        // ==================================
+
+        const strugglingStudents = studentsList.filter((student) => {
+
+            const average = student.calculateAverage();
+
+            return average >= 40 && average <= 49;
+
+        });
+
+
+        // ==================================
+        // 5. Add 5 Grace Marks using map
+        // ==================================
+
+        const studentsAfterGrace = strugglingStudents.map((student) => {
+
+            return {
+
+                id: student.id,
+
+                name: student.name,
+
+                oldAverage: student.calculateAverage(),
+
+                newAverage: student.calculateAverage() + 5
+
+            };
+
+        });
+
+
+        // ==================================
+        // 6. Calculate Total using reduce
+        // ==================================
+
+        const totalAfterGrace = studentsAfterGrace.reduce((sum, student) => {
+
+            return sum + student.newAverage;
+
+        }, 0);
+
+
+        // ==================================
+        // 7. Calculate Grace Average
+        // ==================================
+
+        const graceAverage = studentsAfterGrace.length > 0
+
+            ? totalAfterGrace / studentsAfterGrace.length
+
+            : 0;
+
+
+        // ==================================
+        // 8. Print Grace Committee Report
+        // ==================================
+
+        console.log("========== Grace Committee ==========");
+
+        console.log("Struggling Students:");
+
+        console.table(studentsAfterGrace);
+
+        console.log(
+            "Average After Grace:",
+            graceAverage.toFixed(2)
+        );
+
+
+    </script>
+
+</body>
+
+</html>
